@@ -17,6 +17,8 @@ namespace Камера1
     {
         private FilterInfoCollection videoDevices = null;
         private VideoCaptureDevice videoSource = null;
+        private FilterInfoCollection VideoCaptureDevices;
+        private VideoCaptureDevice FinalVideo;
         Bitmap bmp = null;
         string s = "";
         
@@ -26,17 +28,18 @@ namespace Камера1
             InitializeComponent();
         }
 
-      
-
-        private void button2_Click(object sender, EventArgs e)
-        {
-
-        }
 
         private void Form1_Load(object sender, EventArgs e)
-        {
-           
-        }
+           {
+            VideoCaptureDevices = new FilterInfoCollection(FilterCategory.VideoInputDevice);
+     foreach (FilterInfo VideoCaptureDevice in VideoCaptureDevices)
+            {
+                comboBox1.Items.Add(VideoCaptureDevice.Name);
+            }
+            comboBox1.SelectedIndex = 0;
+            FinalVideo = new VideoCaptureDevice();
+
+           }
             void videoSource_NewFrame(object sender, NewFrameEventArgs eventArgs)
         {
             lock (s)
@@ -72,7 +75,6 @@ namespace Камера1
             videoSource = new VideoCaptureDevice(videoDevices[0].MonikerString);  // подключения устройства
             videoSource.NewFrame += new NewFrameEventHandler(videoSource_NewFrame);  // создание источника видеосигнала 
             pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
-
             videoSource.Start();
           
         }
